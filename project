@@ -1,0 +1,31 @@
+from serial import *
+import os
+import time
+from datetime import datetime
+from time import sleep
+from subprocess import call
+port0="/dev/ttyACM0"
+serialPort0 = Serial(port=port0, baudrate=9600, bytesize=8, timeout=1)
+serialString0 = ''
+qrdata0 = ''
+usersfile = open("/mnt/win/users.txt")
+user=usersfile.readline()
+open0=0
+userid0='user:none'
+f0 = open("/mnt/win/scandata/donttouch1.txt", 'a')
+def coderead(serialPort,serialString,oppen,userid,qrdata,file):
+    serialString = serialPort.readline()
+    oppen=str(serialString.decode("Ascii"))
+    if (oppen[0:9] in user):
+        userid=oppen[0:9]
+    cur = datetime.now()
+    tistamp=str(cur)
+    qrdata=oppen[0:17]
+    #if userid0=='user:none':
+    #    call(["aplay", "/home/pi/Desktop/TF002.wav"])
+    print (qrdata+' '+userid+' '+tistamp)
+    file.write(str(qrdata0+' '+userid0+' '+tistamp+'\n'))
+    file.close()
+while 1:
+    if serialPort0.in_waiting > 0:
+        coderead(serialPort0,serialString0,open0,userid0,qrdata0,f0)
